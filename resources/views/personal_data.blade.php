@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 
+@include('navbar')
+
 <head>
-    @include('navbar') <!-- Incluye el archivo de la barra de navegación -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -15,8 +17,9 @@
 
         <div class="contact-form">
             <h2>Regístrate</h2>
-            <form action="{{ route('personal_data') }}" method="POST">
-                @csrf <!-- Protección CSRF requerida en Laravel -->
+
+            <form action="{{ route('submit_personal_data') }}" method="POST">
+                @csrf
 
                 <label for="name">Nombre:</label>
                 <input type="text" id="name" name="name" required>
@@ -47,6 +50,17 @@
             </form>
         </div>
     </div>
+
+    @if(session('success'))
+    <script>
+        Swal.fire({
+            title: '¡Éxito!',
+            text: "{{ session('success') }}",
+            icon: 'success',
+            confirmButtonText: 'Aceptar'
+        });
+    </script>
+    @endif
 </body>
 
 </html>

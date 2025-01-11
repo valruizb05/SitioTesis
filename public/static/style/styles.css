@@ -1,4 +1,23 @@
-/* Estilos básicos para la página */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('path-to-your-font/Montserrat-Regular.woff2') format('woff2'),
+         url('path-to-your-font/Montserrat-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('path-to-your-font/Montserrat-Bold.woff2') format('woff2'),
+         url('path-to-your-font/Montserrat-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
 body {
     font-family: Monserrat, sans-serif;
     margin: 0;
@@ -9,7 +28,6 @@ body {
 h1 {
     font-family: 'Montserrat', sans-serif;
     color: #050452 !important;
-    /* Esto fuerza el color */
 }
 
 /* Navbar */
@@ -69,7 +87,16 @@ nav {
     /* Texto blanco */
 }
 
-
+footer {
+    text-align: center;
+    padding: 7px 0; /* Espaciado superior e inferior */
+    background-color: #f1f1f1; /* Color de fondo del footer */
+    color: #333; /* Color del texto del footer */
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    font-size: 0.9rem;
+}
 
 
 main {
@@ -79,27 +106,25 @@ main {
 
 /* Sección de bienvenida */
 .welcome-section {
-    background-color: #ffffff;
-    padding: 20px 30px;
-    /* Reducir padding superior para que suba */
     text-align: center;
-    border-radius: 10px;
+    margin-top: 0px; /* Ajusta este valor para subir más el título */
     margin-bottom: 30px;
 }
 
 .welcome-section h1 {
-    font-size: 48px;
-    color: #333;
-    margin-top: 10px;
-    /* Mover el título más arriba */
+    margin-bottom: 15px; /* Ajusta este valor para aumentar el espacio debajo del título */
+    font-size: 3rem; /* Tamaño del texto del título */
+    color: #1a1a3e;
 }
 
+
 .welcome-section p {
-    font-size: 18px;
-    color: #666;
-    margin-top: 5px;
-    /* Mover el párrafo más arriba */
+    margin-bottom: 70px; /* Ajusta este valor para aumentar el espacio debajo del texto */
+    font-size: 1.2rem; /* Tamaño del texto */
+    color: #333;
+    line-height: 1.6; /* Altura de línea para mejor legibilidad */
 }
+
 
 .course-container {
     width: 30%;

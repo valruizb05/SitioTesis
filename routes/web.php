@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\PersonalData;
+use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 // Ruta principal
 Route::get('/', function () {
@@ -29,6 +32,10 @@ Route::get('/related', function () {
 Route::get('/related', function () {
     return view('related'); // Devuelve la vista `related.blade.php`
 })->name('related');
+
+Route::get('/personal-data', function () {
+    return view('personal_data'); // Asegúrate de que este archivo está en resources/views/
+})->name('personal_data');
 
 // Ruta para mostrar texto humorístico
 Route::get('/humor_text', function () {
@@ -72,3 +79,23 @@ Route::post('/', function () {
 Route::post('/ask-topic', function () {
     return 'Categoría seleccionada'; // Pendiente de implementación
 })->name('ask_topic');
+
+Route::post('/submit-personal-data', function (Request $request) {
+    // Validación de los datos
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'surname' => 'required|string|max:255',
+        'age' => 'required|integer|min:0',
+        'gender' => 'required|string|in:masculino,femenino',
+        'education' => 'required|string',
+    ]);
+
+    // Guardar los datos en la base de datos
+    \App\Models\PersonalData::create($validated);
+
+    // Redirigir con un mensaje de éxito
+    Alert::success('¡Éxito!', 'Registrado correctamente.');
+    return redirect()->back()->with('success', 'Datos registrados correctamente.');
+})->name('submit_personal_data');
+
+
