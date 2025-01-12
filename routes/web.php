@@ -75,10 +75,12 @@ Route::post('/', function () {
     return 'Formulario enviado'; // Pendiente de implementación
 })->name('formulario');
 
-// Ruta para manejar la categoría seleccionada
-Route::post('/ask-topic', function () {
-    return 'Categoría seleccionada'; // Pendiente de implementación
+Route::get('/ask-topic', function () {
+    return view('ask_topic'); // Cambia 'ask_topic' por el nombre de tu vista correspondiente
 })->name('ask_topic');
+
+
+use Illuminate\Support\Facades\Session;
 
 Route::post('/submit-personal-data', function (Request $request) {
     // Validación de los datos
@@ -93,9 +95,11 @@ Route::post('/submit-personal-data', function (Request $request) {
     // Guardar los datos en la base de datos
     \App\Models\PersonalData::create($validated);
 
-    // Redirigir con un mensaje de éxito
-    Alert::success('¡Éxito!', 'Registrado correctamente.');
-    return redirect()->back()->with('success', 'Datos registrados correctamente.');
+    // Agrega el mensaje de éxito en la sesión
+    Session::flash('success', 'Datos registrados correctamente.');
+
+    // Devuelve la vista o redirección para que el JavaScript maneje el resto
+    return redirect()->back();
 })->name('submit_personal_data');
 
 

@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 
-<head>
+
     @include('navbar') <!-- Incluye el archivo de la barra de navegación -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Selecciona una Categoría</title>
-    <!-- Estilos -->
-    <link rel="stylesheet" href="{{ asset('static/style/styles.css') }}">
-</head>
+
 
 <body>
     <h2 style="text-align: center; margin-bottom: 30px;">Selecciona una Categoría</h2>

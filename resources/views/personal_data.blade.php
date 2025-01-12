@@ -58,6 +58,11 @@
             text: "{{ session('success') }}",
             icon: 'success',
             confirmButtonText: 'Aceptar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirige a la página de selección de materia
+                window.location.href = "{{ route('ask_topic') }}";
+            }
         });
     </script>
     @endif

@@ -639,8 +639,10 @@ body {
 }
 
 /* Botones de selección con estilos específicos */
-.btn-bio {
-    background-color: #28a745; /* Verde para Biología */
+
+.btn-bio,
+.btn-geo,
+.btn-historia{
     color: white;
     font-size: 18px;
     padding: 12px 24px;
@@ -649,7 +651,12 @@ body {
     cursor: pointer;
     transition: background-color 0.3s ease;
     width: 100%;
-    margin-top: 30px;/* Separar el botón del título */
+    margin-top: 10px;/* Separar el botón del título */
+}
+
+
+.btn-bio {
+    background-color: #28a745; /* Verde para Biología */
 }
 
 .btn-bio:hover {
@@ -658,15 +665,6 @@ body {
 
 .btn-geo {
     background-color: #007bff; /* Azul para Geografía */
-    color: white;
-    font-size: 18px;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 100%;
-    margin-top: 30px; /* Separar el botón del título */
 }
 
 .btn-geo:hover {
@@ -675,15 +673,6 @@ body {
 
 .btn-historia {
     background-color: #dc3545; /* Rojo para Historia */
-    color: white;
-    font-size: 18px;
-    padding: 12px 44px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 100%;
-    margin-top: 30px; /* Separar el botón del título */
 }
 
 .btn-historia:hover {
