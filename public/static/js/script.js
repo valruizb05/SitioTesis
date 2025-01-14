@@ -99,7 +99,7 @@ function showUploadDialog(categoryId) {
         title: 'Sube tu archivo',
         html: `<form id="swalUploadForm" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="_token" value="${document.querySelector('input[name="_token"]').value}">
-                    <input type="file" id="swalFileInput" name="file" accept=".pdf,.txt" class="form-control">
+                    <input type="file" id="swalFileInput" name="file" accept=".txt" class="form-control">
                 </form>`,
         confirmButtonText: 'Cargar',
         showCancelButton: true,
@@ -116,34 +116,29 @@ function showUploadDialog(categoryId) {
             const formData = new FormData();
             formData.append('file', file);
             formData.append('_token', document.querySelector('input[name="_token"]').value);
-    
+
             fetch('/upload_file', {
                 method: 'POST',
                 body: formData,
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
                     if (data.success) {
                         Swal.fire('¡Éxito!', 'El archivo fue cargado correctamente.', 'success').then(() => {
                             window.location.href = data.redirect_url;
                         });
                     } else {
-                        Swal.fire('Error', data.message, 'error');
+                        Swal.fire('Error', data.error, 'error');
                     }
                 })
                 .catch(error => {
-                    console.error('Error en la carga del archivo:', error);
+                    console.error(error);
                     Swal.fire('Error', 'No se pudo cargar el archivo. Intenta de nuevo.', 'error');
                 });
-            
         }
     });
 }
+
 
 
 
