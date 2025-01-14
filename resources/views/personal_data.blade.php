@@ -3,10 +3,6 @@
 
 @include('navbar')
 
-<head>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-
 <body>
     <div class="contact-container">
         <div class="contact-info">
@@ -18,14 +14,14 @@
         <div class="contact-form">
             <h2>Regístrate</h2>
 
-            <form action="{{ route('submit_personal_data') }}" method="POST">
+            <form action="{{ route('submit_users') }}" method="POST">
                 @csrf
 
                 <label for="name">Nombre:</label>
                 <input type="text" id="name" name="name" required>
 
-                <label for="surname">Apellidos:</label>
-                <input type="text" id="surname" name="surname" required><br>
+                <label for="lastname">Apellidos:</label>
+                <input type="text" id="lastname" name="lastname" required><br>
 
                 <label for="age">Edad:</label>
                 <input type="number" id="age" name="age" required><br>

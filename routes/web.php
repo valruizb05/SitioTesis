@@ -1,9 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Models\PersonalData;
+use Illuminate\Support\Facades\Log;
+use App\Models\Results;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\FileController;
+use Spatie\PdfToText\Pdf;
+
 
 // Ruta principal
 Route::get('/', function () {
@@ -23,10 +29,6 @@ Route::get('/developers', function () {
 Route::get('/history', function () {
     return view('history'); // Asegúrate de que `history.blade.php` exista
 })->name('history');
-
-Route::get('/related', function () {
-    return view('related'); // Asegúrate de que `related.blade.php` exista
-})->name('related');
 
 // Ruta para "Related Topics"
 Route::get('/related', function () {
@@ -48,6 +50,13 @@ Route::get('/humor_test', function () {
     return 'Aquí irá el cuestionario de la versión humorística.'; // Pendiente de implementación
 })->name('humor_test');
 
+Route::post('/upload_file', [FileController::class, 'upload'])->name('upload_file');
+Route::get('/show_uploaded_text', [FileController::class, 'show'])->name('show_uploaded_text');
+
+Route::get('/test', function () {
+    return Storage::allFiles();
+});
+
 // Ruta para mostrar textos dentro de una categoría
 Route::get('/categories/{category}', function ($category) {
     $texts = [
@@ -65,11 +74,6 @@ Route::post('/show_texts', function () {
     return 'Texto seleccionado.'; // Pendiente de implementación
 })->name('show_texts');
 
-// Ruta para la selección de categorías
-Route::get('/ask_topic', function () {
-    return view('ask_topic'); // Devuelve la vista `ask_topic.blade.php`
-})->name('ask_topic');
-
 // Ruta para manejar un formulario enviado desde el index
 Route::post('/', function () {
     return 'Formulario enviado'; // Pendiente de implementación
@@ -80,26 +84,72 @@ Route::get('/ask-topic', function () {
 })->name('ask_topic');
 
 
-use Illuminate\Support\Facades\Session;
+Route::post('/ask-topic', function (Request $request) {
+    $validated = $request->validate([
+        'category' => 'required|string',
+    ]);
 
-Route::post('/submit-personal-data', function (Request $request) {
+    session(['selected_category' => $validated['category']]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Categoría seleccionada correctamente.',
+        'category_id' => $validated['category'],
+    ]);
+})->name('ask_topic');
+
+
+
+
+
+
+Route::post('/submit_users', function (Request $request) {
     // Validación de los datos
     $validated = $request->validate([
         'name' => 'required|string|max:255',
-        'surname' => 'required|string|max:255',
+        'lastname' => 'required|string|max:255',
         'age' => 'required|integer|min:0',
         'gender' => 'required|string|in:masculino,femenino',
         'education' => 'required|string',
     ]);
 
     // Guardar los datos en la base de datos
-    \App\Models\PersonalData::create($validated);
+    \App\Models\User::create($validated);
 
     // Agrega el mensaje de éxito en la sesión
     Session::flash('success', 'Datos registrados correctamente.');
 
     // Devuelve la vista o redirección para que el JavaScript maneje el resto
     return redirect()->back();
-})->name('submit_personal_data');
+})->name('submit_users');
+
+
+
+#SELECCION DE MATERIA
+Route::post('/select_asignature', function (Request $request) {
+    $validated = $request->validate([
+        'user_id' => 'required|integer|exists:users,id',
+        'asignature_id' => 'required|integer|exists:asignatures,id',
+    ]);
+
+    Results::create([
+        'user_id' => $validated['user_id'],
+        'asignature_id' => $validated['asignature_id'],
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Materia seleccionada. Ahora carga tu archivo.',
+        'asignature_id' => $validated['asignature_id'],
+    ]);
+})->name('select_asignature');
+
+
+
+
+
+
+
+
 
 

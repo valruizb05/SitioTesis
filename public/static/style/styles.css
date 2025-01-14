@@ -1,21 +1,7 @@
 @font-face {
     font-family: 'Montserrat';
-    src: url('path-to-your-font/Montserrat-Regular.woff2') format('woff2'),
-         url('path-to-your-font/Montserrat-Regular.woff') format('woff');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
+    src: url('../fonts/Montserrat-Regular.ttf') format('truetype');
 }
-
-@font-face {
-    font-family: 'Montserrat';
-    src: url('path-to-your-font/Montserrat-Bold.woff2') format('woff2'),
-         url('path-to-your-font/Montserrat-Bold.woff') format('woff');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-}
-
 
 
 body {
@@ -791,3 +777,4 @@ body {
     cursor: pointer;
     transition: color 0.3s ease;
 }
+
