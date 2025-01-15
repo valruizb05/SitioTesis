@@ -25,31 +25,83 @@ document.addEventListener('DOMContentLoaded', () => {
         .start(); // Inicia el efecto
 });
 
-// Manejo de formularios
-document.querySelectorAll('form').forEach(form => {
-    form.addEventListener('submit', function (event) {
-        event.preventDefault();
-        const formData = new FormData(this);
-        fetch(this.action, {
-            method: this.method,
-            body: formData,
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire('¡Materia seleccionada!', data.message, 'success').then(() => {
-                        showUploadDialog(data.asignature_id); // Llama al siguiente paso
-                    });
-                } else {
-                    Swal.fire('Error', data.message, 'error');
-                }
-            })
-            .catch(() => Swal.fire('Error', 'Ocurrió un error al seleccionar la materia.', 'error'));
+
+function handleRegistrationSuccess(saveTypeTextRoute, categoryRoute, userId, csrfToken) {
+    console.log("Entrando a handleRegistrationSuccess");
+    console.log("Ruta para guardar tipo de texto:", saveTypeTextRoute);
+    console.log("Ruta para categorías:", categoryRoute);
+    console.log("ID del usuario:", userId);
+
+    Swal.fire({
+        title: '¡Éxito!',
+        text: "Datos registrados correctamente.",
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: '¿Qué tipo de texto quieres leer?',
+                text: "Selecciona una opción para continuar.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Humorístico',
+                cancelButtonText: 'Original',
+            }).then((textResult) => {
+                const typeText = textResult.isConfirmed ? 1 : 2;
+                saveTextType(typeText, saveTypeTextRoute, categoryRoute, userId, csrfToken);
+            });
+        }
     });
-});
+}
+// Función modular para guardar el tipo de texto
+function saveTextType(typeText, saveTypeTextRoute, categoryRoute, userId, csrfToken) {
+    if (!userId || userId === 'null') {
+        Swal.fire('Error', 'No se pudo identificar al usuario. Por favor, intenta registrarte de nuevo.', 'error');
+        return;
+    }
+
+    fetch(saveTypeTextRoute, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken,
+        },
+        body: JSON.stringify({ type_text: typeText, user_id: userId }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                title: '¡Tipo de texto registrado!',
+                text: 'Ahora selecciona la materia.',
+                icon: 'success',
+                confirmButtonText: 'Continuar'
+            }).then(() => {
+                window.location.href = categoryRoute;
+            });
+        } else {
+            Swal.fire('Error', data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error en el fetch:', error);
+        Swal.fire('Error', 'No se pudo guardar el tipo de texto.', 'error');
+    });
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('JavaScript cargado correctamente.');
+    const { saveTypeTextRoute, categoryRoute, userId, csrfToken } = window.config;
+
+    console.log("ID del usuario:", userId); // Solo para verificar en consola.
+
+    if (window.location.pathname !== '/personal-data' && (!userId || userId === 'null')) {
+        Swal.fire('Error', 'El usuario no está autenticado.', 'error');
+        return;
+    }
+
+    // Usa las funciones para manejar el flujo
+    handleRegistrationSuccess(saveTypeTextRoute, categoryRoute, userId, csrfToken);
 });
 
 /**
@@ -58,37 +110,49 @@ document.addEventListener('DOMContentLoaded', () => {
  * @param {string} category - La categoría seleccionada
  */
 function handleCategorySelection(event, category) {
-    event.preventDefault(); // Evita el envío predeterminado del formulario
-    console.log("Categoría seleccionada:", category); // Confirma si la función se ejecuta
-    const formData = new FormData();
-    formData.append('category', category);
-    formData.append('_token', document.querySelector('input[name="_token"]').value);
+    event.preventDefault();
+    console.log("Categoría seleccionada:", category); // Confirmar categoría seleccionada
 
-    fetch('/ask-topic', {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("Respuesta del servidor:", data); // Verifica la respuesta del servidor
-        if (data.success) {
-            Swal.fire({
-                title: '¡Categoría seleccionada!',
-                text: data.message,
-                icon: 'success',
-                confirmButtonText: 'Cargar archivo',
-            }).then(() => {
-                showUploadDialog(data.category_id); // Llama al siguiente paso
-            });
-        } else {
-            Swal.fire('Error', data.message, 'error');
+    Swal.fire({
+        title: `Seleccionaste ${category}`,
+        text: "¿Quieres continuar?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sí",
+        cancelButtonText: "No",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch("/save-category", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                },
+                body: JSON.stringify({ category }),
+            })
+                .then((response) => {
+                    console.log("Respuesta de /save-category:", response);
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log("Datos procesados de categoría:", data);
+                    if (data.success) {
+                        Swal.fire("¡Éxito!", data.message, "success").then(() => {
+                            window.location.href = "/next-step";
+                        });
+                    } else {
+                        Swal.fire("Error", data.message, "error");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error en /save-category:", error);
+                    Swal.fire("Error", "Ocurrió un problema", "error");
+                });
         }
-    })
-    .catch(error => {
-        console.error("Error al seleccionar la categoría:", error); // Muestra errores en la consola
-        Swal.fire('Error', 'Ocurrió un error al seleccionar la categoría.', 'error');
     });
 }
+
+
 
 /**
  * Muestra el diálogo para cargar un archivo
@@ -138,7 +202,6 @@ function showUploadDialog(categoryId) {
         }
     });
 }
-
 
 
 

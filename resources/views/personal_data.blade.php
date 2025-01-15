@@ -34,34 +34,40 @@
 
                 <label for="education">Último grado de estudios:</label>
                 <select id="education" name="education">
-                    <option value="primaria">Primaria</option>
-                    <option value="secundaria">Secundaria</option>
-                    <option value="prepa">Preparatoria</option>
-                    <option value="uni">Universidad</option>
-                    <option value="maestria">Maestría</option>
-                    <option value="doctorado">Doctorado</option>
+                    @foreach($degrees as $degree)
+                        <option value="{{ $degree->id }}">{{ $degree->name }}</option>
+                    @endforeach
                 </select>
 
                 <button class="submit-btn" type="submit">Enviar</button>
             </form>
+            
         </div>
     </div>
-
-    @if(session('success'))
+    
+    @if(auth()->check())
     <script>
-        Swal.fire({
-            title: '¡Éxito!',
-            text: "{{ session('success') }}",
-            icon: 'success',
-            confirmButtonText: 'Aceptar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Redirige a la página de selección de materia
-                window.location.href = "{{ route('ask_topic') }}";
-            }
-        });
+        window.config = {
+            saveTypeTextRoute: "{{ route('saveTypeText') }}",
+            categoryRoute: "{{ route('category') }}",
+            userId: {{ auth()->id() }},
+            csrfToken: "{{ csrf_token() }}"
+        };
     </script>
-    @endif
+@else
+    <script>
+        window.config = {
+            saveTypeTextRoute: "{{ route('saveTypeText') }}",
+            categoryRoute: "{{ route('category') }}",
+            userId: null,
+            csrfToken: "{{ csrf_token() }}"
+        };
+    </script>
+@endif
+
+    
+
+    @include('footer')
 </body>
 
 </html>

@@ -13,16 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('lastname');
-            $table->integer('age');
-            $table->string('gender');
-            $table->string('education');
-            $table->timestamps();
+        Schema::create('degree', function (Blueprint $table) {
+            $table->id(); // Campo ID como llave primaria
+            $table->string('name', 50); // Nombre del nivel educativo
+            $table->text('description')->nullable(); // Descripción (opcional)
+            $table->timestamps(); // created_at y updated_at
         });
     }
+    
 
     /**
      * Reverse the migrations.
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user');
+        Schema::dropIfExists('degree');
     }
 };

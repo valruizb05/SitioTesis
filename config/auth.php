@@ -60,16 +60,13 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
-        ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+    'users' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\User::class,
+        'table' => 'user', // Especificar la tabla correcta
     ],
+],
+
 
     /*
     |--------------------------------------------------------------------------
