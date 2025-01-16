@@ -33,10 +33,10 @@ return new class extends Migration
                   ->on('user')
                   ->onDelete('cascade');
     
-            $table->foreign('asignature_id')
+                  $table->foreign('asignature_id')
                   ->references('id')
                   ->on('asignature')
-                  ->onDelete('cascade');
+                  ->onDelete('set null');
         });
     }
     
