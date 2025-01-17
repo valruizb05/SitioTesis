@@ -727,54 +727,105 @@ body {
 
 
 
-.content-container {
-    max-width: 1000px;
-    margin: 40px auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #f9f9f9;
+.text-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    margin: 20px auto;
+    max-width: 600px; /* Limita el ancho */
 }
 
-/* Título de la categoría */
-.content-title {
-    text-align: center;
-    font-size: 28px;
+/* Título de texto */
+.text-title {
+    flex-grow: 1;
+    font-size: 16px;
     font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
-    text-transform: uppercase; /* Convertimos el título a mayúsculas */
+    text-align: left;
+    margin-right: 10px;
+    color: #333; /* Asegura que el texto sea visible */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    overflow: hidden; /* Esconde el texto que no cabe en el contenedor */
+    text-overflow: ellipsis; /* Muestra "..." para texto muy largo */
 }
 
-.content-text {
-    font-size: 18px;
-    line-height: 1.6;
-    color: #555;
-    white-space: pre-wrap; /* Conserva los saltos de línea sin usar <pre> */
+/* Ajuste para los íconos */
+.text-image {
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+    object-fit: contain; /* Ajusta la imagen al contenedor */
+}
+
+/* Contenedor principal de la tarjeta */
+.text-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%; /* Ajusta al ancho del contenedor */
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px; /* Espaciado entre tarjetas */
+}
+
+
+/* Botones con colores */
+.view-button {
+    padding: 10px 15px;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* Colores personalizados para botones */
+.blue { background-color: #0a9fcc; color: white; }
+.blue:hover { background-color:#5ac9eb; color: white;  }
+
+.pink { background-color: #c2316e; }
+.pink:hover { background-color: #ee83b0; color: white; }
+
+.yellow { background-color: #ffbd08; color: white; }
+.yellow:hover { background-color: #ebb849; color: white; }
+
+.purple { background-color: #a243dd; }
+.purple:hover { background-color: #c482ec; color: white; }
+
+.tittletxt {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #04133b;
+    margin-top: 70px;
+}
+
+.text-content {
+    max-width: 90%;
+    margin: 20px auto;
+    background-color: #ffffff;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.text-content p {
+    font-size: 1.2rem;
+    color: #333;
+    text-align: justify;
+    margin-bottom: 15px;
+}
+
+.inf {
+    font-size: 1.2rem;
+    color: #333;
     text-align: justify;
 }
 
-/* Estilo del enlace para volver */
-.back-link {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: white;
-    background-color: #007bff;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+.text-content p {
+    font-size: 1.2rem;
+    color: #333;
+    text-align: justify;
+    margin-bottom: 15px;
 }
-
-.back-link:hover {
-    background-color: #0056b3;
-}
-
-.content-text span:hover {
-    color: #007bff;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-

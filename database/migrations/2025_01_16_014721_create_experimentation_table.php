@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('experimentation', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id'); // Relación con la tabla users
-            $table->unsignedBigInteger('asignature_id'); // Relación con la tabla asignature
+            $table->unsignedBigInteger('asignature_id')->nullable(); // Relación con la tabla asignature
             $table->string('type_text'); // Tipo de texto (humorístico/original)
             $table->integer('question1')->nullable();
             $table->integer('question2')->nullable();
@@ -33,7 +33,7 @@ return new class extends Migration
                   ->on('user')
                   ->onDelete('cascade');
     
-            $table->foreign('asignature_id')
+                  $table->foreign('asignature_id')
                   ->references('id')
                   ->on('asignature')
                   ->onDelete('cascade');
@@ -50,4 +50,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('experimentation');
     }
-};
+};  

@@ -14,27 +14,22 @@
         <p>Lee las preguntas y selecciona la respuesta correcta para cada una.</p>
 
         <!-- Formulario para el cuestionario -->
-        <form action="{{ route('submit_quiz') }}" method="POST">
-            @csrf <!-- Protección contra CSRF -->
-
-            @foreach ($quiz as $question_id => $question_data)
-                <div class="question">
-                    <!-- Muestra la pregunta -->
-                    <p><strong>{{ $question_data['pregunta'] }}</strong></p>
-                    
-                    <!-- Opciones de respuesta -->
-                    @foreach ($question_data['opciones'] as $option)
+        <form action="{{ route('submitQuiz', ['filename' => $filename]) }}" method="POST">
+            @csrf
+            @foreach ($quiz as $index => $question)
+                <div style="margin-bottom: 20px;">
+                    <p><strong>{{ $index + 1 }}. {{ $question['question'] }}</strong></p>
+                    @foreach ($question['options'] as $optionIndex => $option)
                         <label>
-                            <input type="radio" name="{{ $question_id }}" value="{{ $option }}"> {{ $option }}
+                            <input type="radio" name="answers[{{ $index }}]" value="{{ $optionIndex }}">
+                            {{ $option }}
                         </label><br>
                     @endforeach
                 </div>
-                <hr> <!-- Línea divisoria entre preguntas -->
             @endforeach
-
-            <!-- Botón para enviar el cuestionario -->
-            <button type="submit" class="back-link">Enviar Respuestas</button>
+            <button type="submit" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Enviar Respuestas</button>
         </form>
+        
     </div>
 </body>
 </html>

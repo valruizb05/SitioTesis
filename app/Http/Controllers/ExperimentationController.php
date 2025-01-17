@@ -51,6 +51,52 @@ class ExperimentationController extends Controller
     }
 }
 
+public function submitQuiz(Request $request, $filename)
+{
+    $userAnswers = $request->input('answers');
+
+    // Define los cuestionarios
+    $quizzes = [
+        'AparatoRespiratorio' => [
+            ['correct' => 1],
+            ['correct' => 1],
+            ['correct' => 0],
+            ['correct' => 0],
+            ['correct' => 0],
+        ],
+        // Agrega otros cuestionarios aquí...
+    ];
+
+    $correctAnswers = $quizzes[$filename] ?? [];
+    $results = [];
+
+    // Verificar respuestas y calcular aciertos
+    foreach ($correctAnswers as $index => $correctAnswer) {
+        $results["question" . ($index + 1)] = (isset($userAnswers[$index]) && $userAnswers[$index] == $correctAnswer['correct']) ? 1 : 0;
+    }
+
+    // Buscar la fila correspondiente al usuario en `experimentation` y actualizar
+    $experimentation = Experimentation::where('user_id', auth()->id())
+                                       ->where('asignature_id', $this->getAsignatureId($filename))
+                                       ->first();
+
+    if ($experimentation) {
+        $experimentation->update($results);
+    } else {
+        // Si no existe, crea una nueva fila
+        Experimentation::create(array_merge([
+            'user_id' => auth()->id(),
+            'asignature_id' => $this->getAsignatureId($filename), // Función que obtiene el asignature_id según el texto
+            'type_text' => 1, // Asigna el valor correspondiente
+        ], $results));
+    }
+
+    // Redirigir con mensaje de éxito
+    $score = array_sum($results);
+    return redirect()->route('index')->with('success', "Obtuviste $score/" . count($correctAnswers) . " respuestas correctas.");
+}
+
+
 
     
 }

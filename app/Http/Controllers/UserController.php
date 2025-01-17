@@ -28,6 +28,11 @@ class UserController extends Controller
         // Retorna éxito
         return redirect()->back()->with('success', 'Datos registrados correctamente.');
     }
+
+    public function show()
+    {
+        return view('personal-data'); // Asegúrate de que la vista exista.
+    }
     
 
 

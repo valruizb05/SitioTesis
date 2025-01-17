@@ -5,7 +5,7 @@ use App\Models\Results;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\FileController;
-use Spatie\PdfToText\Pdf;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TextController;
 use App\Http\Controllers\UserController;
@@ -22,6 +22,9 @@ Route::post('/submit_users', [UserController::class, 'store'])->name('submit_use
 Route::get('/text/{category}/{filename}', [TextController::class, 'showText'])->name('showText');
 Route::get('/personal-data', [UserController::class, 'showPersonalDataForm'])->name('personal_data');
 Route::get('/texts/{category}', [CategoryController::class, 'listTextsByCategory'])->name('listTexts');
+Route::get('/quiz/{filename}', [QuizController::class, 'showQuiz'])->name('showQuiz');
+Route::post('/quiz/{filename}', [QuizController::class, 'submitQuiz'])->name('submitQuiz');
+
 
 // Ruta para mostrar el contenido de un texto específico
 Route::post('/show_texts', function (Request $request) {

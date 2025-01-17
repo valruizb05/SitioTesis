@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('asignature', function (Blueprint $table) {
-            $table->id();
+            $table->id(); // Esto genera automáticamente una clave primaria de tipo unsignedBigInteger
             $table->string('name');
             $table->timestamps();
         });

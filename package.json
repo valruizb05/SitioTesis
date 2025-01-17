@@ -14,5 +14,12 @@
     "dependencies": {
         "sweetalert2": "^11.15.10",
         "typewriter-effect": "^2.21.0"
-    }
+    },
+
+    "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "test": "vue-cli-service test"
+}
+
 }

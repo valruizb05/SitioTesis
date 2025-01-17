@@ -1,35 +1,44 @@
 <!DOCTYPE html>
 <html lang="es">
-
-@include('navbar')
-
 <head>
-    <title>Temas en {{ $category }}</title>
+    @include('navbar')
+    <title>Textos de {{ ucfirst($category) }}</title>
 </head>
-
 <body>
-    <h2 style="text-align: center; margin-top: 20px;">Temas en {{ $category }}</h2>
+    <br><br><br>
+    <title>Textos de {{ ucfirst($category) }}</title>
+    <h1 style="text-align: center;">Textos de {{ ucfirst($category) }}</h1>
 
-    <div class="grid-container">
-        @foreach ($texts as $text)
-        <div class="text-box">
-            <img src="{{ asset('static/img/topic.png') }}" alt="Imagen del tema">
-            <h3>{{ basename($text, '.txt') }}</h3>
-
-            <form action="{{ route('show_texts') }}" method="POST">
-                @csrf
-                <input type="hidden" name="text" value="{{ $text }}">
-                <button type="submit" class="btn btn-primary">Ver Texto</button>
-            </form>
+    <br>
+    @if (isset($error))
+        <div>
+            <strong>Error:</strong> {{ $error }}
         </div>
+    @endif
+
+    @if (count($texts) > 0)
+    <div class="text-container">
+        @foreach ($texts as $index => $file)
+            <div class="text-item">
+                <!-- Imagen -->
+                <img src="{{ asset('static/img/topic.png') }}" alt="Icono de texto" class="text-image">
+                
+                <!-- Título -->
+                <span class="text-title">{{ pathinfo($file, PATHINFO_FILENAME) }}</span>
+                
+                <!-- Botón -->
+                <a href="{{ route('showText', ['category' => $category, 'filename' => pathinfo($file, PATHINFO_FILENAME)]) }}" 
+                   class="view-button {{ ['blue', 'pink', 'yellow', 'purple'][$index % 4] }}">
+                    Ver Texto
+                </a>
+            </div>
         @endforeach
     </div>
+    
+    @else
+        <p>No hay textos disponibles en esta categoría.</p>
+    @endif
 
-    <div style="text-align: center;">
-        <a href="{{ route('category') }}" class="back-link">Volver a categorías</a>
-    </div>
+    @include('footer')
 </body>
-
-@include('footer')
-
 </html>

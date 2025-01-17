@@ -1,36 +1,25 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    @include('navbar') <!-- Incluye el archivo de la barra de navegación -->
-    <title>Temas en {{ $category }}</title>
+    @include('navbar')
+    <title class="tittletxt">{{ $filename }}</title>
 </head>
 <body>
-    <h2 style="text-align: center; margin-top: 20px;">Temas en {{ $category }}</h2>
-
-    <div class="grid-container">
-        @foreach ($texts as $index => $text)
-        <div class="text-box">
-            <img src="{{ asset('static/img/topic.png') }}" alt="Imagen del tema">
-            <h3>{{ str_replace('.txt', '', $text) }}</h3>
-
-            <form action="{{ route('show_texts') }}" method="POST">
-                @csrf <!-- Protección CSRF requerida por Laravel -->
-                <input type="hidden" name="text" value="{{ $text }}">
-                <button type="submit" class="button-style 
-                    @if ($loop->index % 5 == 1) btn-blue
-                    @elseif ($loop->index % 5 == 2) btn-pink
-                    @elseif ($loop->index % 5 == 3) btn-purple
-                    @elseif ($loop->index % 5 == 4) btn-yellow
-                    @else btn-orange @endif">
-                    Ver Texto
-                </button>
-            </form>
-        </div>
+    <h1 class="tittletxt">{{ $filename }}</h1>
+    <div class="text-content">
+        @foreach (explode("\n", $content) as $paragraph)
+            @if (trim($paragraph) !== '')
+                <p>{{ $paragraph }}</p>
+            @endif
         @endforeach
     </div>
 
-    <div style="text-align: center;">
-        <a href="{{ route('ask_topic') }}" class="back-link">Volver a categorías</a>
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{ route('showQuiz', ['filename' => $filename]) }}" class="btn btn-primary">
+            Realizar Evaluación
+        </a>
     </div>
+    @include('footer')
 </body>
 </html>
+
