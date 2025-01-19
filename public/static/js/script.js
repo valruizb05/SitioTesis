@@ -58,7 +58,7 @@ function saveTextType(typeText, saveTypeTextRoute, categoryRoute, userId, csrfTo
     if (!userId || userId === 'null') {
         Swal.fire('Error', 'No se pudo identificar al usuario. Por favor, intenta registrarte de nuevo.', 'error');
         return;
-    }
+    }    
 
     fetch(saveTypeTextRoute, {
         method: 'POST',
@@ -95,14 +95,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.log("ID del usuario:", userId); // Solo para verificar en consola.
 
-    if (window.location.pathname !== '/personal-data' && (!userId || userId === 'null')) {
-        Swal.fire('Error', 'El usuario no está autenticado.', 'error');
+    if (!userId || userId === null) {
+        console.error('Usuario no autenticado. SweetAlert no se ejecutará.');
         return;
     }
 
-    // Usa las funciones para manejar el flujo
+    // Usa las funciones para manejar el flujo de usuario
     handleRegistrationSuccess(saveTypeTextRoute, categoryRoute, userId, csrfToken);
 });
+
 
 /**
  * Maneja la selección de categoría

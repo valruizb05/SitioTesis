@@ -11,7 +11,12 @@ use App\Http\Controllers\TextController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ExperimentationController;
 
-#RUTA DESPUES DE REGISTRAR SELECCIONAR TIPO TEXTO 
+use Illuminate\Support\Facades\Auth;
+
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect()->route('personal_data')->with('success', 'Has cerrado sesión correctamente.');
+})->name('logout');
 
 Route::get('/text/{type}', [TextController::class, 'show'])->name('text');
 Route::post('/save-type-text', [ExperimentationController::class, 'saveTypeText'])->name('saveTypeText');
@@ -21,7 +26,7 @@ Route::post('/upload_file', [FileController::class, 'upload'])->name('uploadFile
 Route::post('/submit_users', [UserController::class, 'store'])->name('submit_users');
 Route::get('/text/{category}/{filename}', [TextController::class, 'showText'])->name('showText');
 Route::get('/personal-data', [UserController::class, 'showPersonalDataForm'])->name('personal_data');
-Route::get('/texts/{category}', [CategoryController::class, 'listTextsByCategory'])->name('listTexts');
+Route::get('/list-texts/{category}', [CategoryController::class, 'listTexts'])->name('listTexts');
 Route::get('/quiz/{filename}', [QuizController::class, 'showQuiz'])->name('showQuiz');
 Route::post('/quiz/{filename}', [QuizController::class, 'submitQuiz'])->name('submitQuiz');
 

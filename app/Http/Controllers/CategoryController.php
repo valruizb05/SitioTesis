@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Experimentation;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
@@ -12,45 +13,40 @@ class CategoryController extends Controller
     {
         return view('category'); // Vista de categorías
     }
+    
 
-    public function listTextsByCategory($category)
-    {
-        // Verifica si el usuario está autenticado
-        if (!auth()->check()) {
-            abort(403, 'Usuario no autenticado.');
-        }
+    public function listTexts($category)
+{
+    $categories = [
+        'biologia' => 1,
+        'geografia' => 2,
+        'historia' => 3,
+    ];
 
-        // Obtiene el tipo de texto seleccionado del usuario
-        $userTypeText = Experimentation::where('user_id', auth()->id())->value('type_text');
+    $id_categoria = $categories[$category] ?? null;
 
-        if (!$userTypeText) {
-            return redirect()->route('category')->withErrors('No se encontró el tipo de texto seleccionado para este usuario.');
-        }
-
-        $folder = $userTypeText == 1 ? 'humoristic' : 'original';
-
-        // Define la ruta completa
-        $path = "texts/$folder/$category";
-
-        // Verifica si la carpeta existe
-        if (!Storage::exists($path)) {
-            abort(404, "No se encontró la carpeta de textos para esta categoría: $path");
-        }
-
-        // Obtiene los textos disponibles en la carpeta
-        $texts = Storage::files($path);
-
-        // Verifica si hay textos disponibles
-        if (empty($texts)) {
-            return view('texts', [
-                'texts' => [],
-                'category' => $category,
-                'error' => 'No hay textos disponibles en esta categoría.',
-            ]);
-        }
-
-        // Retorna la vista con los textos
-        return view('texts', compact('texts', 'category'));
+    if (!$id_categoria) {
+        return redirect()->back()->withErrors('Categoría no válida.');
     }
+
+    if (!auth()->check()) {
+        return redirect()->route('login')->withErrors('Por favor, inicia sesión para continuar.');
+    }
+
+    Experimentation::updateOrCreate(
+        ['user_id' => auth()->id()],
+        ['asignature_id' => $id_categoria]
+    );
+
+    // Simulación: Cambia esto por la lógica para obtener textos reales
+    $texts = [
+        ['id' => 1, 'name' => 'Texto 1'],
+        ['id' => 2, 'name' => 'Texto 2'],
+        ['id' => 3, 'name' => 'Texto 3'],
+    ];
+
+    return view('list', compact('texts', 'category'));
 }
 
+
+ }
