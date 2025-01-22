@@ -1,30 +1,25 @@
 <!DOCTYPE html>
 <html lang="es">
-
-@include('navbar')
-
 <head>
     <title>Textos de {{ ucfirst($category) }}</title>
     <link rel="stylesheet" href="{{ asset('static/css/style.css') }}">
+    @include('navbar')
 </head>
-
 <body>
-    <h1 style="text-align: center; margin-top:90px; margin-bottom: 40px;">Textos de {{ ucfirst($category) }}</h1>
+    <h2 style="text-align: center; margin-bottom: 30px;">Textos de {{ ucfirst($category) }}</h2>
 
-    <div class="text-container">
+    <div class="text-list-container">
         @if (!empty($files) && count($files) > 0)
             @foreach ($files as $file)
                 <div class="text-item">
-                    <p class="text-title">{{ basename($file, '.txt') }}</p>
-                    <a href="{{ route('showText', ['category' => $category, 'filename' => basename($file, '.txt')]) }}" class="btn btn-primary">Ver Texto</a>
+                    <p>{{ basename($file) }}</p>
+                    <a href="{{ route('showText', ['category' => $category, 'filename' => pathinfo($file, PATHINFO_FILENAME)]) }}" class="btn-view-text">Ver Texto</a>
                 </div>
             @endforeach
         @else
-            <p>No hay textos disponibles para esta categoría.</p>
+            <p>No se encontraron textos para esta categoría.</p>
         @endif
     </div>
-
     @include('footer')
 </body>
-
 </html>

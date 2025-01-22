@@ -65,6 +65,7 @@ public function listTexts($category)
 {
     Log::info('Entrando a listTexts:', ['category' => $category]);
 
+    // Recupera al usuario autenticado
     $user = auth()->user();
 
     // Recupera el registro de experimentación del usuario
@@ -73,6 +74,9 @@ public function listTexts($category)
     if (!$experimentation) {
         return redirect()->route('category')->withErrors('No se encontró el registro de experimentación.');
     }
+
+    // Verifica el tipo de texto seleccionado
+    Log::info('Tipo de texto del usuario:', ['type_text' => $experimentation->type_text]);
 
     // Determina la carpeta según el tipo de texto
     $folder = $experimentation->type_text == 1 ? 'humoristic' : 'original';
@@ -91,6 +95,7 @@ public function listTexts($category)
     // Devuelve la vista con los textos
     return view('list', compact('files', 'category'));
 }
+
 
 
 

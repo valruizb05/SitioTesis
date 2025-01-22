@@ -24,28 +24,33 @@ class ExperimentationController extends Controller
     }
 
     public function saveTypeText(Request $request)
-    {
-        Log::info('Datos recibidos en saveTypeText:', $request->all()); // Agrega este log
-        try {
-            $validated = $request->validate([
-                'type_text' => 'required|integer|in:1,2',
-            ]);
-            Experimentation::updateOrCreate(
-                ['user_id' => auth()->id()],
-                ['type_text' => $validated['type_text']]
-            );
-            return response()->json([
-                'success' => true,
-                'message' => 'Tipo de texto guardado correctamente.',
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error en saveTypeText:', ['exception' => $e->getMessage()]);
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al guardar el tipo de texto: ' . $e->getMessage(),
-            ], 500);
-        }
+{
+    Log::info('Datos recibidos en saveTypeText:', $request->all());
+    try {
+        $validated = $request->validate([
+            'type_text' => 'required|integer|in:1,2',
+        ]);
+
+        Experimentation::updateOrCreate(
+            ['user_id' => auth()->id()],
+            ['type_text' => $validated['type_text']]
+        );
+
+        Log::info('Tipo de texto guardado correctamente:', ['type_text' => $validated['type_text']]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tipo de texto guardado correctamente.',
+        ]);
+    } catch (\Exception $e) {
+        Log::error('Error en saveTypeText:', ['exception' => $e->getMessage()]);
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al guardar el tipo de texto: ' . $e->getMessage(),
+        ], 500);
     }
+}
+
     
     
 }

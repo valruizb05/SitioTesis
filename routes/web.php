@@ -34,10 +34,11 @@ Route::get('/text/{category}/{filename}', [TextController::class, 'showText'])->
 
 
 
+
 #Route::get('/text/{type}', [TextController::class, 'show'])->name('text');
 
 #Route::post('/upload_file', [FileController::class, 'upload'])->name('uploadFile');
-#Route::get('/text/{category}/{filename}', [TextController::class, 'showText'])->name('showText');
+
 
 Route::post('/quiz/{filename}', [QuizController::class, 'submitQuiz'])->name('submitQuiz');
 Route::get('/evaluation', [QuizController::class, 'showEvaluation'])->name('evaluation');
