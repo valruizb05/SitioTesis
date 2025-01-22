@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Experimentation; // Importar el modelo Experimentation
+use Illuminate\Support\Facades\Auth;
 
 class QuizController extends Controller
 {
+    
     public function showQuiz($filename)
     {
         // Define los cuestionarios
@@ -106,6 +109,29 @@ class QuizController extends Controller
         return view('quiz', compact('quiz', 'filename'));
     }
 
+    public function showEvaluation($type, $filename)
+    {  
+
+        $originalPath = storage_path("app/texts/original/{$filename}.txt");
+        $humorPath = storage_path("app/texts/humor/{$filename}.txt");
+
+        // Cargar el contenido del texto basado en el tipo
+        if ($type === 'original' && file_exists($originalPath)) {
+            $content = file_get_contents($originalPath);
+        } elseif ($type === 'humor' && file_exists($humorPath)) {
+            $content = file_get_contents($humorPath);
+        } else {
+            return redirect()->back()->withErrors('El texto no se encuentra disponible.');
+        }
+
+        // Mostrar la vista con el texto cargado
+        return view('evaluation', [
+            'nextTextType' => $type,
+            'content' => $content,
+            'filename' => $filename,
+        ]);
+    }
+
     public function submitQuiz(Request $request, $filename)
     {
         $userAnswers = $request->input('answers');
@@ -119,18 +145,136 @@ class QuizController extends Controller
                 ['correct' => 0],
                 ['correct' => 0],
             ],
-            // Agrega más cuestionarios aquí
+            'Ecologia' => [
+                ['correct' => 1],
+                ['correct' => 2],
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 1],
+            ],
+            'Genetica' => [
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 0],
+                ['correct' => 1],
+            ],
+            'SistemaInmunologico' => [
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 1],
+            ],
+            'Cartografia' => [
+                ['correct' => 0],
+                ['correct' => 1],
+                ['correct' => 0],
+                ['correct' => 1],
+                ['correct' => 1],
+            ],
+            'DesastresNaturales' => [
+                ['correct' => 1],
+                ['correct' => 2],
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 1],
+            ],
+            'MedioAmbiente' => [
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 1],
+            ],
+            'SeresVivos' => [
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 0],
+                ['correct' => 1],
+            ],
+            'Conquista' => [
+                ['correct' => 0],
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 0],
+            ],
+            
+            'EdadAntigua' => [
+                ['correct' => 0],
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 0],
+            ],
+            'GuerraFria' => [
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 1],
+            ],
+            'Pasteles' => [
+                ['correct' => 2],
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 1],
+                ['correct' => 1],
+            ],
         ];
 
-        $correctAnswers = $quizzes[$filename] ?? [];
-        $score = 0;
+        $quiz = $quizzes[$filename] ?? null;
 
-        foreach ($correctAnswers as $index => $correctAnswer) {
-            if (isset($userAnswers[$index]) && $userAnswers[$index] == $correctAnswer['correct']) {
-                $score++;
-            }
+        if (!$quiz) {
+            return redirect()->back()->withErrors('Cuestionario no encontrado.');
         }
-
-        return redirect()->route('index')->with('success', "Obtuviste $score/" . count($correctAnswers) . " respuestas correctas.");
+    
+        // Procesar las respuestas del usuario
+        $results = [];
+        foreach ($quiz as $index => $question) {
+            $results[] = isset($userAnswers[$index]) && $userAnswers[$index] == $question['correct'] ? 1 : 0;
+        }
+    
+        // Guardar los resultados en la tabla `experimentation`
+        $userId = Auth::id();
+        $experimentation = Experimentation::firstOrNew(['user_id' => $userId]);
+    
+        $experimentation->question1 = $results[0] ?? 0;
+        $experimentation->question2 = $results[1] ?? 0;
+        $experimentation->question3 = $results[2] ?? 0;
+        $experimentation->question4 = $results[3] ?? 0;
+        $experimentation->question5 = $results[4] ?? 0;
+    
+        $currentTextType = $experimentation->type_text; // 1: Humorístico, 2: Original
+        $nextTextType = $currentTextType == 1 ? 2 : 1; // Cambiar al tipo numérico
+        
+    
+        $experimentation->type_text = $nextTextType;
+        $experimentation->save();
+    
+        // Redirigir al texto opuesto para lectura
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Has completado el cuestionario. Ahora procederás a leer el siguiente texto.',
+            'nextTextType' => $nextTextType,
+            'filename' => $filename,
+        ]);
     }
+
+    // Métodos para obtener texto con humor o texto original
+    private function getHumoristicText($filename)
+    {
+        // Tu lógica para obtener el texto con humor (archivo o base de datos)
+        return "Contenido humorístico para {$filename}";
+    }
+
+    private function getOriginalText($filename)
+    {
+        // Tu lógica para obtener el texto original (archivo o base de datos)
+        return "Contenido original para {$filename}";
+    }
+
 }

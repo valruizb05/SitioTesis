@@ -4,37 +4,30 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class TextController extends Controller
 {
-    public function show($type)
-    {
-        if ($type === 'humoristic') {
-            $text = "Este es un texto humorístico.";
-        } else {
-            $text = "Este es un texto original sin humor.";
-        }
-
-        return view('text', compact('text'));
-    }
-
-    
-
     public function showText($category, $filename)
     {
-        // Define la ruta del archivo basado en la categoría y el nombre del archivo
+        // Determina el tipo de texto (humorístico u original)
         $folder = auth()->user()->type_text == 1 ? 'humoristic' : 'original';
-        $path = "texts/$folder/$category/$filename.txt";
-
+    
+        // Construye la ruta al archivo
+        $path = public_path("texts/$folder/$category/$filename.txt");
+    
         // Verifica si el archivo existe
-        if (!Storage::exists($path)) {
+        if (!File::exists($path)) {
+            Log::error("Archivo no encontrado", ['path' => $path]);
             abort(404, "No se encontró el texto solicitado: $filename.");
         }
+    
+        // Obtén el contenido del archivo
+        $content = File::get($path);
+        Log::info('Mostrando texto:', ['category' => $category, 'filename' => $filename, 'path' => $path]);
 
-        // Lee el contenido del archivo
-        $content = Storage::get($path);
-
-        // Retorna una vista para mostrar el texto
+        // Devuelve la vista con el contenido del texto
         return view('show_text', compact('content', 'filename'));
     }
 

@@ -16,6 +16,7 @@
     <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
    <script src="{{ asset('static/js/script.js') }}?v={{ time() }}" defer></script>
+   
 </head>
 
 <body>

@@ -75,13 +75,15 @@ nav {
 
 footer {
     text-align: center;
-    padding: 7px 0; /* Espaciado superior e inferior */
-    background-color: #f1f1f1; /* Color de fondo del footer */
-    color: #333; /* Color del texto del footer */
+    padding: 1px; 
+    height: 5%;/* Espaciado superior e inferior */
+    background-color: #04133b; /* Color de fondo del footer */
+    color: #ffffff; /* Color del texto del footer */
     position: fixed;
     bottom: 0;
     width: 100%;
     font-size: 0.9rem;
+    margin-top: 20px;
 }
 
 
@@ -733,66 +735,62 @@ body {
     gap: 20px;
     align-items: center;
     margin: 20px auto;
-    max-width: 600px; /* Limita el ancho */
+    max-width: 600px; /* Ancho máximo del contenedor */
 }
 
-/* Título de texto */
+.text-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%; /* Asegura que las tarjetas ocupen el ancho completo */
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+.text-image {
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+    object-fit: contain; /* Asegura que la imagen no se deforme */
+}
+
 .text-title {
     flex-grow: 1;
     font-size: 16px;
     font-weight: bold;
     text-align: left;
     margin-right: 10px;
-    color: #333; /* Asegura que el texto sea visible */
-    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
-    overflow: hidden; /* Esconde el texto que no cabe en el contenedor */
-    text-overflow: ellipsis; /* Muestra "..." para texto muy largo */
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Ajuste para los íconos */
-.text-image {
-    width: 50px;
-    height: 50px;
-    margin-right: 15px;
-    object-fit: contain; /* Ajusta la imagen al contenedor */
-}
-
-/* Contenedor principal de la tarjeta */
-.text-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%; /* Ajusta al ancho del contenedor */
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 10px; /* Espaciado entre tarjetas */
-}
-
-
-/* Botones con colores */
 .view-button {
     padding: 10px 15px;
     color: white;
     text-decoration: none;
     border-radius: 5px;
     font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
-/* Colores personalizados para botones */
-.blue { background-color: #0a9fcc; color: white; }
-.blue:hover { background-color:#5ac9eb; color: white;  }
+/* Colores pastel */
+.btn-blue { background-color: #5ac9eb; }
+.btn-pink { background-color: #ee83b0; }
+.btn-yellow { background-color: #ebb849; }
+.btn-purple { background-color: #c482ec; }
 
-.pink { background-color: #c2316e; }
-.pink:hover { background-color: #ee83b0; color: white; }
+/* Hover en los botones */
+.btn-blue:hover { background-color: #18a7d3; }
+.btn-pink:hover { background-color: #c2316e; }
+.btn-yellow:hover { background-color: #c2880b; }
+.btn-purple:hover { background-color: #a243dd; }
 
-.yellow { background-color: #ffbd08; color: white; }
-.yellow:hover { background-color: #ebb849; color: white; }
-
-.purple { background-color: #a243dd; }
-.purple:hover { background-color: #c482ec; color: white; }
 
 .tittletxt {
     text-align: center;
@@ -807,8 +805,13 @@ body {
     background-color: #ffffff;
     padding: 50px;
     border-radius: 10px;
+    border: 1px solid #ccc; /* Borde general */
+    border-bottom: 5px solid #5ac9eb; /* Borde inferior azul más grueso */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative; /* Asegúrate de posicionarlo correctamente */
 }
+
+
 
 .text-content p {
     font-size: 1.2rem;
@@ -829,3 +832,22 @@ body {
     text-align: justify;
     margin-bottom: 15px;
 }
+
+.btn-blue {
+    background-color: #04133b;; /* Azul pastel */
+    color: white; /* Texto en blanco */
+    padding: 10px 15px;
+    border: 2px solid  #04133b;; /* Borde azul */
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-blue:hover {
+    background-color: #0f1679; /* Azul más oscuro */
+    border-color: #0f1679; /* Cambiar borde al pasar mouse */
+}
+

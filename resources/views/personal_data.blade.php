@@ -45,28 +45,23 @@
         </div>
     </div>
     
-    @if(auth()->check())
     <script>
+        @if(auth()->check())
         window.config = {
             saveTypeTextRoute: "{{ route('saveTypeText') }}",
             categoryRoute: "{{ route('category') }}",
             userId: {{ auth()->id() }},
             csrfToken: "{{ csrf_token() }}"
         };
-    </script>
-@else
-    <script>
+        @else
         window.config = {
-            saveTypeTextRoute: "{{ route('saveTypeText') }}",
-            categoryRoute: "{{ route('category') }}",
+            saveTypeTextRoute: null,
+            categoryRoute: null,
             userId: null,
             csrfToken: "{{ csrf_token() }}"
         };
+        @endif
     </script>
-@endif
-
-    
-
     @include('footer')
 </body>
 

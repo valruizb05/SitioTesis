@@ -53,42 +53,38 @@ function handleRegistrationSuccess(saveTypeTextRoute, categoryRoute, userId, csr
         }
     });
 }
-// Función modular para guardar el tipo de texto
-function saveTextType(typeText, saveTypeTextRoute, categoryRoute, userId, csrfToken) {
-    if (!userId || userId === 'null') {
-        Swal.fire('Error', 'No se pudo identificar al usuario. Por favor, intenta registrarte de nuevo.', 'error');
-        return;
-    }    
 
-    fetch(saveTypeTextRoute, {
+function saveTextType(typeText) {
+    if (!window.config.userId) {
+        Swal.fire('Error', 'No se pudo identificar al usuario. Por favor, inicia sesión.', 'error');
+        return;
+    }
+
+    fetch(window.config.saveTypeTextRoute, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrfToken,
+            'X-CSRF-TOKEN': window.config.csrfToken,
         },
-        body: JSON.stringify({ type_text: typeText, user_id: userId }),
+        body: JSON.stringify({
+            type_text: typeText
+        }),
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            Swal.fire({
-                title: '¡Tipo de texto registrado!',
-                text: 'Ahora selecciona la materia.',
-                icon: 'success',
-                confirmButtonText: 'Continuar'
-            }).then(() => {
-                window.location.href = categoryRoute;
+            Swal.fire('¡Guardado!', data.message, 'success').then(() => {
+                window.location.href = window.config.categoryRoute;
             });
         } else {
             Swal.fire('Error', data.message, 'error');
         }
     })
     .catch(error => {
-        console.error('Error en el fetch:', error);
+        console.error('Error:', error);
         Swal.fire('Error', 'No se pudo guardar el tipo de texto.', 'error');
     });
 }
-
 
 document.addEventListener('DOMContentLoaded', () => {
     const { saveTypeTextRoute, categoryRoute, userId, csrfToken } = window.config;
@@ -103,106 +99,3 @@ document.addEventListener('DOMContentLoaded', () => {
     // Usa las funciones para manejar el flujo de usuario
     handleRegistrationSuccess(saveTypeTextRoute, categoryRoute, userId, csrfToken);
 });
-
-
-/**
- * Maneja la selección de categoría
- * @param {Event} event - El evento del formulario
- * @param {string} category - La categoría seleccionada
- */
-function handleCategorySelection(event, category) {
-    event.preventDefault();
-    console.log("Categoría seleccionada:", category); // Confirmar categoría seleccionada
-
-    Swal.fire({
-        title: `Seleccionaste ${category}`,
-        text: "¿Quieres continuar?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Sí",
-        cancelButtonText: "No",
-    }).then((result) => {
-        if (result.isConfirmed) {
-            fetch("/save-category", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
-                },
-                body: JSON.stringify({ category }),
-            })
-                .then((response) => {
-                    console.log("Respuesta de /save-category:", response);
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log("Datos procesados de categoría:", data);
-                    if (data.success) {
-                        Swal.fire("¡Éxito!", data.message, "success").then(() => {
-                            window.location.href = "/next-step";
-                        });
-                    } else {
-                        Swal.fire("Error", data.message, "error");
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error en /save-category:", error);
-                    Swal.fire("Error", "Ocurrió un problema", "error");
-                });
-        }
-    });
-}
-
-
-
-/**
- * Muestra el diálogo para cargar un archivo
- * @param {number} categoryId - ID de la categoría seleccionada
- */
-function showUploadDialog(categoryId) {
-    Swal.fire({
-        title: 'Sube tu archivo',
-        html: `<form id="swalUploadForm" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="_token" value="${document.querySelector('input[name="_token"]').value}">
-                    <input type="file" id="swalFileInput" name="file" accept=".txt" class="form-control">
-                </form>`,
-        confirmButtonText: 'Cargar',
-        showCancelButton: true,
-        preConfirm: () => {
-            const fileInput = Swal.getPopup().querySelector('#swalFileInput');
-            if (!fileInput.files[0]) {
-                Swal.showValidationMessage('Por favor selecciona un archivo');
-            }
-            return fileInput.files[0];
-        },
-    }).then(result => {
-        if (result.value) {
-            const file = result.value;
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('_token', document.querySelector('input[name="_token"]').value);
-
-            fetch('/upload_file', {
-                method: 'POST',
-                body: formData,
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire('¡Éxito!', 'El archivo fue cargado correctamente.', 'success').then(() => {
-                            window.location.href = data.redirect_url;
-                        });
-                    } else {
-                        Swal.fire('Error', data.error, 'error');
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    Swal.fire('Error', 'No se pudo cargar el archivo. Intenta de nuevo.', 'error');
-                });
-        }
-    });
-}
-
-
-

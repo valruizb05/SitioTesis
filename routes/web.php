@@ -9,38 +9,54 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TextController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\File;
 use App\Http\Controllers\ExperimentationController;
-
 use Illuminate\Support\Facades\Auth;
 
-Route::post('/logout', function () {
-    Auth::logout();
-    return redirect()->route('personal_data')->with('success', 'Has cerrado sesión correctamente.');
-})->name('logout');
 
-Route::get('/text/{type}', [TextController::class, 'show'])->name('text');
-Route::post('/save-type-text', [ExperimentationController::class, 'saveTypeText'])->name('saveTypeText');
-Route::get('/category', [CategoryController::class, 'index'])->name('category');
-Route::post('/save-category', [CategoryController::class, 'saveCategory'])->name('saveCategory');
-Route::post('/upload_file', [FileController::class, 'upload'])->name('uploadFile');
+#REGISTRO
 Route::post('/submit_users', [UserController::class, 'store'])->name('submit_users');
-Route::get('/text/{category}/{filename}', [TextController::class, 'showText'])->name('showText');
 Route::get('/personal-data', [UserController::class, 'showPersonalDataForm'])->name('personal_data');
+
+#ASIGNATURA
+Route::get('/category', [CategoryController::class, 'index'])->name('category');
+
+#TIPO DE TEXTO
+Route::post('/saveTypeText', [ExperimentationController::class, 'saveTypeText'])->name('saveTypeText');
+
+#LISTAR TEXTOS
 Route::get('/list-texts/{category}', [CategoryController::class, 'listTexts'])->name('listTexts');
-Route::get('/quiz/{filename}', [QuizController::class, 'showQuiz'])->name('showQuiz');
+
+#GUARDAR LA CATEGORIA SELECCIONADA 
+Route::post('/save-category', [CategoryController::class, 'saveCategory'])->name('saveCategory');
+
+Route::get('/text/{category}/{filename}', [TextController::class, 'showText'])->name('showText');
+
+
+
+#Route::get('/text/{type}', [TextController::class, 'show'])->name('text');
+
+#Route::post('/upload_file', [FileController::class, 'upload'])->name('uploadFile');
+#Route::get('/text/{category}/{filename}', [TextController::class, 'showText'])->name('showText');
+
 Route::post('/quiz/{filename}', [QuizController::class, 'submitQuiz'])->name('submitQuiz');
-
-
-// Ruta para mostrar el contenido de un texto específico
-Route::post('/show_texts', function (Request $request) {
-    $textPath = $request->input('text'); // Obtén el texto seleccionado
-    $content = Storage::get($textPath); // Obtén el contenido del texto
-
-    return view('show_text', compact('content'));
-})->name('show_texts');
+Route::get('/evaluation', [QuizController::class, 'showEvaluation'])->name('evaluation');
+Route::get('/evaluation/{type}/{filename}', [QuizController::class, 'showEvaluation'])->name('evaluation.show');
+Route::get('/quiz/{filename}', [QuizController::class, 'showQuiz'])->name('quiz.show');
+Route::get('/showText/{type}/{filename}', [QuizController::class, 'showEvaluation'])->name('evaluation.show');
 
 
 
+
+
+
+
+
+
+
+Route::get('/test', function () {
+    return Storage::allFiles();
+});
 
 // Ruta principal
 Route::get('/', function () {
@@ -67,39 +83,16 @@ Route::get('/related', function () {
 })->name('related');
 
 
-Route::post('/upload_file', [FileController::class, 'upload'])->name('upload_file');
-Route::get('/show_uploaded_text', [FileController::class, 'show'])->name('show_uploaded_text');
-
-Route::get('/test', function () {
-    return Storage::allFiles();
-});
-
-
-
-
-// Ruta para manejar un formulario enviado desde el index
-Route::post('/', function () {
-    return 'Formulario enviado'; // Pendiente de implementación
+Route::match(['GET', 'POST'], '/', function () {
+    if (request()->isMethod('POST')) {
+        return 'Formulario enviado';
+    }
+    return view('index'); // Asegúrate de tener un archivo `resources/views/index.blade.php`
 })->name('formulario');
 
-Route::get('/ask-topic', function () {
-    return view('ask_topic'); // Cambia 'ask_topic' por el nombre de tu vista correspondiente
-})->name('ask_topic');
 
 
-Route::post('/ask-topic', function (Request $request) {
-    $validated = $request->validate([
-        'category' => 'required|string',
-    ]);
 
-    session(['selected_category' => $validated['category']]);
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Categoría seleccionada correctamente.',
-        'category_id' => $validated['category'],
-    ]);
-})->name('ask_topic');
 
 
 
