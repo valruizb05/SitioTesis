@@ -30,28 +30,23 @@ Route::get('/list-texts/{category}', [CategoryController::class, 'listTexts'])->
 #GUARDAR LA CATEGORIA SELECCIONADA 
 Route::post('/save-category', [CategoryController::class, 'saveCategory'])->name('saveCategory');
 
+#MOSTRAR TEXTO
 Route::get('/text/{category}/{filename}', [TextController::class, 'showText'])->name('showText');
 
+Route::get('/showText/{type}/{category}/{filename}', [TextController::class, 'showEvaluation'])->name('evaluation.show');
+
+
+#Route::get('/evaluation/{type}/{filename}', [TextController::class, 'showEvaluation'])->name('evaluation.show');
+Route::post('/saveEvaluation', [QuizController::class, 'saveEvaluation'])->name('saveEvaluation')->middleware('auth');
+
+Route::get('/login', function () {
+    return 'Página de inicio de sesión no configurada';
+})->name('login');
 
 
 
-#Route::get('/text/{type}', [TextController::class, 'show'])->name('text');
-
-#Route::post('/upload_file', [FileController::class, 'upload'])->name('uploadFile');
-
-
-Route::post('/quiz/{filename}', [QuizController::class, 'submitQuiz'])->name('submitQuiz');
-Route::get('/evaluation', [QuizController::class, 'showEvaluation'])->name('evaluation');
-Route::get('/evaluation/{type}/{filename}', [QuizController::class, 'showEvaluation'])->name('evaluation.show');
-Route::get('/quiz/{filename}', [QuizController::class, 'showQuiz'])->name('quiz.show');
-Route::get('/showText/{type}/{filename}', [QuizController::class, 'showEvaluation'])->name('evaluation.show');
-
-
-
-
-
-
-
+Route::post('/submitQuiz/{filename}', [QuizController::class, 'submitQuiz'])->name('submitQuiz');
+Route::get('/showQuiz/{filename}', [QuizController::class, 'showQuiz'])->name('quiz.show');
 
 
 

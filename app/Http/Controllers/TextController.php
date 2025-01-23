@@ -42,7 +42,39 @@ class TextController extends Controller
     return view('show_text', compact('content', 'filename'));
 }
 
+public function showEvaluation($type, $category, $filename)
+{
+    // Define las rutas completas basadas en la categoría y tipo de texto
+    $originalPath = public_path("texts/original/{$category}/{$filename}.txt");
+    $humorPath = public_path("texts/humoristic/{$category}/{$filename}.txt");
+
+    Log::info("Ruta completa del archivo original: {$originalPath}");
+    Log::info("Ruta completa del archivo humorístico: {$humorPath}");
+
+    // Verifica si el archivo existe
+    if ($type === 'original' && File::exists($originalPath)) {
+        $content = File::get($originalPath);
+    } elseif ($type === 'humor' && File::exists($humorPath)) {
+        $content = File::get($humorPath);
+    } else {
+        Log::error("Archivo no encontrado para tipo: {$type}, categoría: {$category}, archivo: {$filename}");
+        abort(404, "El texto solicitado no está disponible.");
+    }
+
+    Log::info("El tipo de texto es: {$type}, categoría: {$category}");
+Log::info("Archivo a cargar: {$filename}");
+
+
+    // Retorna la vista con el contenido del texto
+    return view('evaluation', [
+        'nextTextType' => $type,
+        'content' => $content,
+        'filename' => $filename,
+        'category' => $category,
+    ]);
+}
 
 
 
 }
+

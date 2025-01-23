@@ -851,3 +851,30 @@ body {
     border-color: #0f1679; /* Cambiar borde al pasar mouse */
 }
 
+.star-rating span {
+    font-size: 2rem;
+    color: gray;
+    cursor: pointer;
+}
+
+.star-rating span:hover,
+.star-rating span:hover ~ span {
+    color: gold;
+}
+
+#preference-buttons .btn-choice {
+    margin: 5px;
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#preference-buttons .btn-choice.selected {
+    background-color: #007bff;
+    color: white;
+    border-color: #0056b3;
+}
+
+

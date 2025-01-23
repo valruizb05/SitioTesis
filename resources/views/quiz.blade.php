@@ -105,12 +105,11 @@
                     @endforeach
                 </div>
             @endforeach
-        
             <button type="submit">Enviar Respuestas</button>
         </form>
-        
     </div>
-    <s)cript src="{{ asset('js/quiz.js') }}"></script>
+    <script src="{{ asset('static/js/quiz.js') }}"></script>
+
    
 </body>
 </html>
