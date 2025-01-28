@@ -4,10 +4,10 @@
 @include('navbar')
     <!-- Página Principal -->
     <main>
-        <section class="welcome-section">
+        <!--- section class="welcome-section">
             <h1>Bienvenido</h1>
             <p id="app">"La verdadera promesa de la IA es liberar el potencial humano." - Satya Nadella (CEO de Microsoft).</p>
-        </section>
+        </!--->
 
         <section class="courses-section">
             <div class="course-container">
